@@ -52,7 +52,7 @@ for i in range(len(reply)):
     output = ''.join(tokenizer.convert_ids_to_tokens(reply[i][0]))
     print(output)
     print()
-# python use_model_v2.py --model_path ./NEW/ccc/
+# python use_model_v2.py --model_path ./Net_Army_v6/training_epoch_20/
 
 # 高雄市民好久不見的韓國瑜出現啦 台下歡呼聲很大 噓聲也很大 就這樣 開心的陪我們度過最後的三分鐘 真羨慕幸福的高雄人啊
 # 求有沒有中天新聞說 高雄人不投韓國瑜，是因為不捨得 他離開高雄的新聞影片? 小弟找了好久都沒看到.... 
