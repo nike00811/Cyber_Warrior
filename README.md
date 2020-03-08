@@ -21,3 +21,5 @@ python run_training.py \
 ```
 python use_model_v2.py --model_path ./Net_Army_v6/training_epoch_20/
 ```
+
+![](https://i.imgur.com/I3lnvqN.png)
