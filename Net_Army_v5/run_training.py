@@ -7,8 +7,7 @@ import random
 import argparse
 import logging
 import json
-import os
-import sys
+
 logging.basicConfig(level=logging.DEBUG,
                     datefmt = '%m/%d/%Y %H:%M:%S',
                     format='%(asctime)s %(message)s',
@@ -21,6 +20,7 @@ parser.add_argument('--train_file', default=None, type=str, required=True)
 parser.add_argument('--epoch_time', default=2, type=int)
 parser.add_argument('--learning_rate',default=3e-5, type=float)
 parser.add_argument('--output_name',default=None, type=str, required=True)
+# parser.add_argument('--save_steps', type=int, default=-1)
 parser.add_argument('--batch_size', type=int, default=2)
 parser.add_argument('--seed', type=int, default=20)
 parser.add_argument('--save_epochs', type=int, default=5)
@@ -162,8 +162,6 @@ t_total = len(train_dataset) // args.epoch_time
 scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=t_total)
 
 print('start training')
-
-
 step = 0
 model.train()
 for epoch in range(args.epoch_time):
@@ -175,8 +173,6 @@ for epoch in range(args.epoch_time):
             masked_lm_labels = batch['mask_ids'].cuda()
             loss, prediction_scores = model(input_ids=input_ids, masked_lm_labels=masked_lm_labels)
 
-            loss_sum += loss.mean().item()
-            local_loss += loss.mean().item()
             if (i+1) % 100 == 0:
                 print('epoch: {} {}/{}, loss = {}'.format(epoch+1, i+1, len(train_iter), local_loss ))
                 local_loss = 0
@@ -184,6 +180,8 @@ for epoch in range(args.epoch_time):
                 # print('masked_lm_labels', masked_lm_labels[0])
                 # print(tokenizer.decode(input_ids[0]))
                 # print(tokenizer.decode(masked_lm_labels[0]))
+            loss_sum += loss.mean().item()
+            local_loss += loss.mean().item()
 
             optimizer.zero_grad()
             loss.mean().backward()
@@ -199,10 +197,7 @@ for epoch in range(args.epoch_time):
     logger.info('epoch: {}, loss = {}'.format(epoch+1, loss_sum))
     if (epoch+1) % args.save_epochs == 0 :
         print("start saving ...")
-        # torch.save(model, args.output_name+'_epoch_'+str(epoch+1)+'.pkl')
-        dir_name = args.output_name+'_epoch_'+str(epoch+1)
-        os.mkdir(dir_name)
-        BertForMaskedLM.save_pretrained(model, save_directory=dir_name)
+        torch.save(model, args.output_name+'_epoch_'+str(epoch+1)+'.pkl')
 
 
 # python run_training.py \
