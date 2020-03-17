@@ -19,7 +19,7 @@ python run_training.py \
 使用模型
 
 ```
-python use_model_v2.py --model_path ./Net_Army_v6/training_epoch_20/
+python use_model_v2.py --model_path ./Net_Army_v5/training_epoch_20/
 ```
 
 ![](https://i.imgur.com/I3lnvqN.png)
